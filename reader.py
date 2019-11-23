@@ -1,14 +1,23 @@
-#import pandas as pd
-#import xml.etree.cElementTree as ET
-#import matplotlib.pyplot as plt
-#import networkx as nx
 from xml.dom import minidom
 
+# Check if a string is an integer
+# This is necessary to get ID number
+def isInt(s):
+    try: 
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+# Get all the ID numbers
+def setID(item, ID):
+    for elem in item:
+        if isInt(elem.attributes['value'].value):
+            ID += [elem.attributes['value'].value]
 
 tree = minidom.parse('PurchasingExample.xes')
 items = tree.getElementsByTagName('string')
 
-for elem in items:
-    if elem.attributes['value'].value == '339':
-        print('hey')
+ID = []
 
+setID(items, ID)
