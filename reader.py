@@ -1,4 +1,6 @@
 from xml.dom import minidom
+import networkx as nx
+import matplotlib.pyplot as plt
 
 # Check if a string is an integer
 # This is necessary to get ID number
@@ -17,16 +19,38 @@ def setID(item, ID):
 
 # Get all the activities in a set
 def setAct(item, act):
+    seq2 = []
     for elem in item:
         if elem.attributes['key'].value == 'Activity':
-            act.add(elem.attributes['value'].value)
+            act.append(elem.attributes['value'].value)
+
+# Create nodes for each activity in the log
+def createNodes(G, seq):
+    for i in seq:
+        G.add_node(i, name = i)
+
+# Create the edges between the nodes 
+def createEdges(G, seq):
+    for i in range(len(seq)-2):
+        G.add_edge(seq[i], seq[i+2])
+        i+=2
 
 tree = minidom.parse('PurchasingExample.xes')   
 items = tree.getElementsByTagName('string')
 
 ID = []
-act = set({}) # Forced to be a set
+act = [] 
+
+G = nx.DiGraph()
 
 setID(items, ID)
 
 setAct(items, act)
+
+createNodes(G, act)
+
+createEdges(G, act)
+
+nx.draw(G, nodesize = 250)
+
+plt.savefig('grafo.png',dpi = 300)
