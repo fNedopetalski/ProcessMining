@@ -54,6 +54,8 @@ createNodes(G, act)
 
 createEdges(G, act)
 
+G.remove_edge("End", "Create Purchase Requisition")
+
 pos = nx.layout.spring_layout(G, k =2.0)
 
 nx.draw(G, with_labels = True, nodesize = 250)
