@@ -24,6 +24,7 @@ def setAct(item, act):
         if elem.attributes['key'].value == 'Activity':
             act.append(elem.attributes['value'].value)
 
+
 # Create nodes for each activity in the log
 def createNodes(G, seq):
     for i in seq:
@@ -31,9 +32,11 @@ def createNodes(G, seq):
 
 # Create the edges between the nodes 
 def createEdges(G, seq):
+    labels=[]
     for i in range(len(seq)-2):
-        G.add_edge(seq[i], seq[i+2])
+        labels.append((seq[i],seq[i+2]))
         i+=2
+    G.add_edges_from(labels)
 
 tree = minidom.parse('PurchasingExample.xes')   
 items = tree.getElementsByTagName('string')
@@ -51,6 +54,12 @@ createNodes(G, act)
 
 createEdges(G, act)
 
-nx.draw(G, nodesize = 250)
+pos = nx.layout.spring_layout(G, k =2.0)
 
-plt.savefig('grafo.png',dpi = 300)
+nx.draw(G, with_labels = True, nodesize = 250)
+
+print("Número de nós: ",G.number_of_nodes())
+print("Número de arestas: ",G.number_of_edges())
+plt.show()
+
+#plt.savefig('grafo.png', dpi = 300)
